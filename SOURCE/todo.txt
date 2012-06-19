@@ -1,0 +1,7 @@
+*Formula Editor:
+*can move(swap) colours around, eg from red to blue. Useful for adding colours up for greyscale.
+*can do positional conditions on horiz/vert pixels or percentage
+*can drag around lines instead of moving one line at a time
+*added simple matrix editor for custom neighbourhood formulas
+
+test different sized images

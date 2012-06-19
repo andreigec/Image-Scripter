@@ -1,0 +1,16 @@
+Version 0.3
+*Changed to use GITHub
+*Remembers formula text on main form when going into formula editor and back
+*Added formula operation help text, as well as general formula help text
+*Saves the thread count, current formula and toolbar options between sessions
+
+Version 0.2
+*Can now write to input or output image(writing to input image will affect following formulas, but will not overwrite the original file)
+*Added possibility for several passes of the image
+*Can add comments
+*Can perform operations on two variables
+*New layout to enable processing multiple images
+*Automatically makes thread count the same as the processor count
+
+Version 0.1
+demo release
