@@ -1,0 +1,44 @@
+FSTART
+Conditions
+If-Colour
+IM:Image:0
+Colour:All
+Less Than
+100
+FEND
+FSTART
+Operation
+User Input Pixel Operation
+IM:Image:0
+Subtract
+255
+Colour:All
+IM:Output
+FEND
+FSTART
+Conditions
+End If
+End If
+FEND
+FSTART
+Conditions
+If-Colour
+IM:Image:0
+Colour:All
+Greater Than or Equal to
+100
+FEND
+FSTART
+Operation
+User Input Pixel Operation
+IM:Image:0
+Add
+255
+Colour:All
+IM:Output
+FEND
+FSTART
+Conditions
+End If
+End If
+FEND

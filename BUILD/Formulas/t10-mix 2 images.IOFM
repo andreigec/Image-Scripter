@@ -1,0 +1,38 @@
+FSTART
+Conditions
+If-Position
+X
+Percent
+Less Than or Equal to
+50
+FEND
+FSTART
+Moves
+Move
+IM:Image:0
+IM:Output
+FEND
+FSTART
+Conditions
+End If
+End If
+FEND
+FSTART
+Conditions
+If-Position
+X
+Percent
+Greater Than
+50
+FEND
+FSTART
+Moves
+Move
+IM:Image:1
+IM:Output
+FEND
+FSTART
+Conditions
+End If
+End If
+FEND
