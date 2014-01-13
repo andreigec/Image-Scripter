@@ -36,7 +36,7 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.heighttext = new System.Windows.Forms.TextBox();
 			this.updatebutton = new System.Windows.Forms.Button();
-			this.matrixgrid = new ANDREICSLIB.PanelUpdates();
+			this.matrixgrid = new ANDREICSLIB.PanelReplacement();
 			this.okbutton = new System.Windows.Forms.Button();
 			this.cancelbutton = new System.Windows.Forms.Button();
 			this.menuStrip1.SuspendLayout();
@@ -180,7 +180,7 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox heighttext;
 		private System.Windows.Forms.Button updatebutton;
-		private ANDREICSLIB.PanelUpdates matrixgrid;
+		private ANDREICSLIB.PanelReplacement matrixgrid;
 		private System.Windows.Forms.Button okbutton;
 		private System.Windows.Forms.Button cancelbutton;
 	}

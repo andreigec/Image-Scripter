@@ -40,13 +40,18 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.threadCB = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.applyformulabutton = new System.Windows.Forms.Button();
+            this.applyformulaB = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.formulaEditorB = new System.Windows.Forms.Button();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.fastformulaCB = new System.Windows.Forms.ComboBox();
-            this.FEbutton = new System.Windows.Forms.Button();
+            this.loadfastformulaB = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.loadimagebutton = new System.Windows.Forms.Button();
+            this.loadimageB = new System.Windows.Forms.Button();
             this.maintabcontrol = new System.Windows.Forms.TabControl();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.tabrclick = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -59,6 +64,8 @@
             this.mainpage.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.maintabcontrol.SuspendLayout();
             this.tabrclick.SuspendLayout();
@@ -72,7 +79,7 @@
             this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(760, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(581, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -110,9 +117,9 @@
             // 
             this.statusbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressbar});
-            this.statusbar.Location = new System.Drawing.Point(0, 463);
+            this.statusbar.Location = new System.Drawing.Point(0, 481);
             this.statusbar.Name = "statusbar";
-            this.statusbar.Size = new System.Drawing.Size(760, 22);
+            this.statusbar.Size = new System.Drawing.Size(581, 22);
             this.statusbar.TabIndex = 6;
             this.statusbar.Text = "statusStrip1";
             // 
@@ -129,7 +136,7 @@
             this.mainpage.Location = new System.Drawing.Point(4, 22);
             this.mainpage.Name = "mainpage";
             this.mainpage.Padding = new System.Windows.Forms.Padding(3);
-            this.mainpage.Size = new System.Drawing.Size(752, 413);
+            this.mainpage.Size = new System.Drawing.Size(573, 431);
             this.mainpage.TabIndex = 0;
             this.mainpage.Text = "Main";
             this.mainpage.UseVisualStyleBackColor = true;
@@ -140,10 +147,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.threadCB);
             this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Controls.Add(this.applyformulabutton);
-            this.groupBox5.Location = new System.Drawing.Point(8, 178);
+            this.groupBox5.Controls.Add(this.applyformulaB);
+            this.groupBox5.Location = new System.Drawing.Point(22, 245);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(738, 88);
+            this.groupBox5.Size = new System.Drawing.Size(559, 88);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Execution Of Algorithm";
@@ -175,34 +182,83 @@
             this.label2.TabIndex = 10;
             this.label2.Text = "Threads";
             // 
-            // applyformulabutton
+            // applyformulaB
             // 
-            this.applyformulabutton.Location = new System.Drawing.Point(163, 42);
-            this.applyformulabutton.Name = "applyformulabutton";
-            this.applyformulabutton.Size = new System.Drawing.Size(89, 23);
-            this.applyformulabutton.TabIndex = 6;
-            this.applyformulabutton.Text = "Apply Formula";
-            this.applyformulabutton.UseVisualStyleBackColor = true;
-            this.applyformulabutton.Click += new System.EventHandler(this.ApplyformulabuttonClick);
+            this.applyformulaB.Location = new System.Drawing.Point(163, 42);
+            this.applyformulaB.Name = "applyformulaB";
+            this.applyformulaB.Size = new System.Drawing.Size(89, 23);
+            this.applyformulaB.TabIndex = 6;
+            this.applyformulaB.Text = "Apply Formula";
+            this.applyformulaB.UseVisualStyleBackColor = true;
+            this.applyformulaB.Click += new System.EventHandler(this.ApplyformulabuttonClick);
             // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.fastformulaCB);
-            this.groupBox2.Controls.Add(this.FEbutton);
+            this.groupBox2.Controls.Add(this.panel2);
+            this.groupBox2.Controls.Add(this.splitter1);
+            this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Location = new System.Drawing.Point(8, 80);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(738, 76);
+            this.groupBox2.Size = new System.Drawing.Size(559, 119);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Loading A Formula";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.formulaEditorB);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(208, 16);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(348, 100);
+            this.panel2.TabIndex = 12;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 11);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(144, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Load or edit a loaded formula";
+            // 
+            // formulaEditorB
+            // 
+            this.formulaEditorB.Location = new System.Drawing.Point(9, 51);
+            this.formulaEditorB.Name = "formulaEditorB";
+            this.formulaEditorB.Size = new System.Drawing.Size(151, 23);
+            this.formulaEditorB.TabIndex = 4;
+            this.formulaEditorB.Text = "Open Formula Editor";
+            this.formulaEditorB.UseVisualStyleBackColor = true;
+            this.formulaEditorB.Click += new System.EventHandler(this.FEbuttonClick1);
+            // 
+            // splitter1
+            // 
+            this.splitter1.BackColor = System.Drawing.Color.Silver;
+            this.splitter1.Location = new System.Drawing.Point(203, 16);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(5, 100);
+            this.splitter1.TabIndex = 11;
+            this.splitter1.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.fastformulaCB);
+            this.panel1.Controls.Add(this.loadfastformulaB);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Location = new System.Drawing.Point(3, 16);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 100);
+            this.panel1.TabIndex = 10;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 24);
+            this.label1.Location = new System.Drawing.Point(8, 11);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(108, 13);
             this.label1.TabIndex = 8;
@@ -212,43 +268,42 @@
             // 
             this.fastformulaCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fastformulaCB.FormattingEnabled = true;
-            this.fastformulaCB.Location = new System.Drawing.Point(12, 40);
+            this.fastformulaCB.Location = new System.Drawing.Point(9, 27);
             this.fastformulaCB.Name = "fastformulaCB";
-            this.fastformulaCB.Size = new System.Drawing.Size(121, 21);
+            this.fastformulaCB.Size = new System.Drawing.Size(185, 21);
             this.fastformulaCB.TabIndex = 7;
-            this.fastformulaCB.SelectedIndexChanged += new System.EventHandler(this.FastformulaCbSelectedIndexChanged);
             // 
-            // FEbutton
+            // loadfastformulaB
             // 
-            this.FEbutton.Location = new System.Drawing.Point(161, 38);
-            this.FEbutton.Name = "FEbutton";
-            this.FEbutton.Size = new System.Drawing.Size(151, 23);
-            this.FEbutton.TabIndex = 4;
-            this.FEbutton.Text = "Open Formula Editor";
-            this.FEbutton.UseVisualStyleBackColor = true;
-            this.FEbutton.Click += new System.EventHandler(this.FEbuttonClick1);
+            this.loadfastformulaB.Location = new System.Drawing.Point(9, 51);
+            this.loadfastformulaB.Name = "loadfastformulaB";
+            this.loadfastformulaB.Size = new System.Drawing.Size(185, 23);
+            this.loadfastformulaB.TabIndex = 9;
+            this.loadfastformulaB.Text = "Load Formula";
+            this.loadfastformulaB.UseVisualStyleBackColor = true;
+            this.loadfastformulaB.Click += new System.EventHandler(this.loadfastformulaB_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.loadimagebutton);
+            this.groupBox1.Controls.Add(this.loadimageB);
             this.groupBox1.Location = new System.Drawing.Point(8, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(738, 59);
+            this.groupBox1.Size = new System.Drawing.Size(559, 59);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Loading Images";
             // 
-            // loadimagebutton
+            // loadimageB
             // 
-            this.loadimagebutton.Location = new System.Drawing.Point(6, 19);
-            this.loadimagebutton.Name = "loadimagebutton";
-            this.loadimagebutton.Size = new System.Drawing.Size(106, 23);
-            this.loadimagebutton.TabIndex = 5;
-            this.loadimagebutton.Text = "Load Image";
-            this.loadimagebutton.UseVisualStyleBackColor = true;
-            this.loadimagebutton.Click += new System.EventHandler(this.LoadimagebuttonClick);
+            this.loadimageB.Location = new System.Drawing.Point(6, 19);
+            this.loadimageB.Name = "loadimageB";
+            this.loadimageB.Size = new System.Drawing.Size(106, 23);
+            this.loadimageB.TabIndex = 5;
+            this.loadimageB.Text = "Load Image";
+            this.loadimageB.UseVisualStyleBackColor = true;
+            this.loadimageB.Click += new System.EventHandler(this.LoadimagebuttonClick);
             // 
             // maintabcontrol
             // 
@@ -257,7 +312,7 @@
             this.maintabcontrol.Location = new System.Drawing.Point(0, 24);
             this.maintabcontrol.Name = "maintabcontrol";
             this.maintabcontrol.SelectedIndex = 0;
-            this.maintabcontrol.Size = new System.Drawing.Size(760, 439);
+            this.maintabcontrol.Size = new System.Drawing.Size(581, 457);
             this.maintabcontrol.TabIndex = 7;
             this.maintabcontrol.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaintabcontrolMouseClick);
             // 
@@ -308,7 +363,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(760, 485);
+            this.ClientSize = new System.Drawing.Size(581, 503);
             this.Controls.Add(this.maintabcontrol);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.statusbar);
@@ -325,7 +380,10 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.maintabcontrol.ResumeLayout(false);
             this.tabrclick.ResumeLayout(false);
@@ -342,12 +400,12 @@
 		private System.Windows.Forms.StatusStrip statusbar;
 		public System.Windows.Forms.ToolStripProgressBar progressbar;
 		private System.Windows.Forms.TabPage mainpage;
-		private System.Windows.Forms.Button loadimagebutton;
+		private System.Windows.Forms.Button loadimageB;
 		private System.Windows.Forms.ComboBox threadCB;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.ComboBox fastformulaCB;
-		private System.Windows.Forms.Button applyformulabutton;
-		private System.Windows.Forms.Button FEbutton;
+		private System.Windows.Forms.Button applyformulaB;
+		private System.Windows.Forms.Button formulaEditorB;
 		private System.Windows.Forms.TabControl maintabcontrol;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.GroupBox groupBox1;
@@ -361,6 +419,11 @@
 		private System.Windows.Forms.ToolStripMenuItem showHistogramToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem showPopupWhenAlgorithmsCompleteToolStripMenuItem;
+        private System.Windows.Forms.Button loadfastformulaB;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.Panel panel1;
 	}
 }
 

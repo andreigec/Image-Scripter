@@ -41,7 +41,7 @@
             this.loadedformulas = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.formulapanel = new ANDREICSLIB.PanelUpdates();
+            this.formulapanel = new ANDREICSLIB.PanelReplacement();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -254,7 +254,7 @@
 
 		#endregion
 
-		private ANDREICSLIB.PanelUpdates formulapanel;
+		private ANDREICSLIB.PanelReplacement formulapanel;
 		private System.Windows.Forms.Button addrowbutton;
 		private System.Windows.Forms.ComboBox formulatype;
 		private System.Windows.Forms.ComboBox subformulatype;

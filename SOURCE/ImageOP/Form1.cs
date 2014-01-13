@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using ANDREICSLIB;
+using ImageOP.ServiceReference1;
 
 namespace ImageOP
 {
@@ -33,13 +34,9 @@ namespace ImageOP
 		public Dictionary<int, ICL> ImagePanels = new Dictionary<int, ICL>();
 
         #region licensing
-        private const string AppTitle = "Image OP";
-        private const double AppVersion = 0.3;
+        private const string AppTitle = "Image Scripter";
+        private const double AppVersion = 0.5;
         private const String HelpString = "";
-
-        private const String UpdatePath = "https://github.com/EvilSeven/Image-OP/zipball/master";
-        private const String VersionPath = "https://raw.github.com/EvilSeven/Image-OP/master/INFO/version.txt";
-        private const String ChangelogPath = "https://raw.github.com/EvilSeven/Image-OP/master/INFO/changelog.txt";
 
         private readonly String OtherText =
             @"©" + DateTime.Now.Year +
@@ -97,9 +94,36 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 			LoadFastFormulas();
             LoadConfig();
-
-            Licensing.CreateLicense(this, HelpString, AppTitle, AppVersion, OtherText, VersionPath, UpdatePath, ChangelogPath, menuStrip1);
+            Licensing.CreateLicense(this, menuStrip1, new Licensing.SolutionDetails(GetDetails, HelpString, AppTitle, AppVersion, OtherText));
+          
 		}
+
+        public Licensing.DownloadedSolutionDetails GetDetails()
+        {
+            try
+            {
+                var sr = new ServicesClient();
+                var ti = sr.GetTitleInfo(AppTitle);
+                if (ti == null)
+                    return null;
+                return ToDownloadedSolutionDetails(ti);
+
+            }
+            catch (Exception)
+            {
+            }
+            return null;
+        }
+
+        public static Licensing.DownloadedSolutionDetails ToDownloadedSolutionDetails(TitleInfoServiceModel tism)
+        {
+            return new Licensing.DownloadedSolutionDetails()
+            {
+                ZipFileLocation = tism.LatestTitleDownloadPath,
+                ChangeLog = tism.LatestTitleChangelog,
+                Version = tism.LatestTitleVersion
+            };
+        }
 
 		private void LoadFastFormulas()
 		{
@@ -487,12 +511,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		{
 			ApplyFormula();
 		}
-
-		private void FastformulaCbSelectedIndexChanged(object sender, EventArgs e)
-		{
-			LoadFastFormula();
-		}
-
+        
 		private void MaintabcontrolMouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button != MouseButtons.Right)
@@ -536,7 +555,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 		private void threadCB_KeyPress(object sender, KeyPressEventArgs e)
 		{
-            e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true, false, false), e.KeyChar,
+            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar,
                                                    threadCB);
 		}
 
@@ -550,6 +569,11 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
             tsi.Add(showPopupWhenAlgorithmsCompleteToolStripMenuItem);
 
             FormConfigRestore.SaveConfig(this, ConfigFile, lc, tsi);
+        }
+
+        private void loadfastformulaB_Click(object sender, EventArgs e)
+        {
+            LoadFastFormula();
         }
 
 	}
