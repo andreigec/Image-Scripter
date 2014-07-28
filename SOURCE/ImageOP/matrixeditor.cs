@@ -84,13 +84,13 @@ namespace ImageOP
 
 		private void widthtext_KeyPress(object sender, KeyPressEventArgs e)
 		{
-		    e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true, false, false), e.KeyChar,
+		    e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar,
 		                                           widthtext);
 		}
 
 		private void gridtextkeypress(object sender, KeyPressEventArgs e)
 		{
-            e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true,true, false), e.KeyChar);
+            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true,true, false), e.KeyChar);
 		}
 
 		private void okbutton_Click(object sender, EventArgs e)

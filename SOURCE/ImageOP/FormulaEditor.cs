@@ -6,20 +6,21 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ANDREICSLIB;
+using ANDREICSLIB.ClassExtras;
 
 namespace ImageOP
 {
     public partial class FormulaEditor : Form
     {
         public Form1 baseform;
-        public ListUpdates<formula> formulas = new ListUpdates<formula>();
+        public List<formula> formulas = new List<formula>();
         public bool isSet;
 
         private string rootFolder = "";
 
         //drag ops
-        private static PanelUpdates dragging;
-        private static PanelUpdates dragparent;
+        private static PanelReplacement dragging;
+        private static PanelReplacement dragparent;
         private static bool IsDragging;
 
         public static Image gripimage = null;
@@ -58,7 +59,7 @@ namespace ImageOP
             isSet = false;
         }
 
-        private static void varlocation(ref PanelUpdates PU, bool addall = true)
+        private static void varlocation(ref PanelReplacement PU, bool addall = true)
         {
             var CB = new ComboBox();
             CB.Items.Add(calculations.RedOP);
@@ -71,10 +72,10 @@ namespace ImageOP
             PU.addControl(CB, true);
         }
 
-        private static void addclosebutton(ref PanelUpdates PU)
+        private static void addclosebutton(ref PanelReplacement PU)
         {
             var B = new Button();
-            ObjectUpdates.AddToolTip(B, "Click here to remove this formula");
+            ObjectExtras.AddToolTip(B, "Click here to remove this formula");
             B.Click += B_Click;
             B.Text = "X";
             B.Size = new Size(20, 20);
@@ -83,7 +84,7 @@ namespace ImageOP
             PU.addControl(B, true);
         }
 
-        private static void addMatrixEditorButton(ref PanelUpdates PU, Control textField = null)
+        private static void addMatrixEditorButton(ref PanelReplacement PU, Control textField = null)
         {
             var B = new Button();
             //ObjectUpdates.addToolTip(B, "Click here to edit matrix using editor");
@@ -97,7 +98,7 @@ namespace ImageOP
             PU.addControl(B, true);
         }
 
-        private static int getI(PanelUpdates U2, String name)
+        private static int getI(PanelReplacement U2, String name)
         {
             var index = -1;
             var count = 0;
@@ -113,10 +114,13 @@ namespace ImageOP
             return index;
         }
 
-        private static bool SwitchControls(PanelUpdates control, bool up)
+        private static bool SwitchControls(PanelReplacement control, bool up)
         {
-            var U2 = ((PanelUpdates)control.Parent);
+            var U2 = ((PanelReplacement)control.Parent);
             var F = ((FormulaEditor)U2.Parent);
+
+            if (F == null)
+                return false;
 
             //get index of this item
 
@@ -130,7 +134,7 @@ namespace ImageOP
             else
                 newindex++;
 
-            F.formulas.Swap(index, newindex);
+            ListExtras.Swap(ref F.formulas, index, newindex);
             U2.switchControlLocations(index, newindex);
             return true;
         }
@@ -141,7 +145,7 @@ namespace ImageOP
 			var success = true;
 			var B = ((Button)sender);
 			//name of the panel we want to move
-			var U = ((PanelUpdates)B.Parent);
+			var U = ((PanelReplacement)B.Parent);
 			while (success)
 			{
 				success = SwitchControls(U, true);
@@ -156,7 +160,7 @@ namespace ImageOP
 			var success = true;
 			var B = ((Button)sender);
 			//name of the panel we want to move
-			var U = ((PanelUpdates)B.Parent);
+			var U = ((PanelReplacement)B.Parent);
 			while (success)
 			{
 			success=SwitchControls(U, false);
@@ -175,8 +179,8 @@ namespace ImageOP
             if (e.Button != MouseButtons.Left)
                 return;
 
-            dragging = ((PanelUpdates)((Panel)sender).Parent);
-            dragparent = dragging.Parent as PanelUpdates;
+            dragging = ((PanelReplacement)((Panel)sender).Parent);
+            dragparent = dragging.Parent as PanelReplacement;
             IsDragging = true;
         }
 
@@ -204,7 +208,7 @@ namespace ImageOP
                 SwitchControls(dragging, false);
         }
 
-        private static void addMoveArrows(ref PanelUpdates PU)
+        private static void addMoveArrows(ref PanelReplacement PU)
         {
             var P = new Panel();
             P.Size = new Size(PU.Height, PU.Height);
@@ -217,7 +221,7 @@ namespace ImageOP
             PU.addControl(P, true);
         }
 
-        private static void addvariablesCB(ref PanelUpdates PU, bool noVariables = false)
+        private static void addvariablesCB(ref PanelReplacement PU, bool noVariables = false)
         {
             var add = calculations.GetVarList(noVariables);
 
@@ -232,7 +236,7 @@ namespace ImageOP
             PU.addControl(CB, true);
         }
 
-        private static void addLabel(String textl, ref PanelUpdates PU)
+        private static void addLabel(String textl, ref PanelReplacement PU)
         {
             var L = new Label();
             L.Text = textl;
@@ -247,7 +251,7 @@ namespace ImageOP
             PU.addControl(L, true);
         }
 
-        private static void addNumbers(ref PanelUpdates PU, List<int> possibilities)
+        private static void addNumbers(ref PanelReplacement PU, List<int> possibilities)
         {
             var CB = new ComboBox();
             foreach (var i in possibilities)
@@ -260,7 +264,7 @@ namespace ImageOP
             PU.addControl(CB, true);
         }
 
-        private static Control addStrings(ref PanelUpdates PU, List<String> possibilities)
+        private static Control addStrings(ref PanelReplacement PU, List<String> possibilities)
         {
             var CB = new ComboBox();
             foreach (var i in possibilities)
@@ -274,21 +278,21 @@ namespace ImageOP
             return CB;
         }
 
-        private static void addCommentLine(ref PanelUpdates PU)
+        private static void addCommentLine(ref PanelReplacement PU)
         {
             var TB = new TextBox();
             TB.Width = 600;
             PU.addControl(TB, true);
         }
 
-        private static void addPassLine(ref PanelUpdates PU)
+        private static void addPassLine(ref PanelReplacement PU)
         {
             addLabel("The following will only be executed on pass number:", ref PU);
 
             addNumbers(ref PU, new List<int> { 1, 2, 3 });
         }
 
-        private static void addSwapLine(ref PanelUpdates PU)
+        private static void addSwapLine(ref PanelReplacement PU)
         {
             addLabel("move", ref PU);
 
@@ -304,7 +308,7 @@ namespace ImageOP
 
             varlocation(ref PU);
         }
-        private static void addMoveLine(ref PanelUpdates PU)
+        private static void addMoveLine(ref PanelReplacement PU)
         {
             addLabel("move", ref PU);
 
@@ -317,7 +321,7 @@ namespace ImageOP
             addvariablesCB(ref PU);
         }
 
-        private static void AddCustomNHOperation(ref PanelUpdates PU)
+        private static void AddCustomNHOperation(ref PanelReplacement PU)
         {
             addLabel("Apply Matrix:", ref PU);
 
@@ -337,7 +341,7 @@ namespace ImageOP
             addvariablesCB(ref PU);
         }
 
-        private static void AddPresetNHOperation(ref PanelUpdates PU)
+        private static void AddPresetNHOperation(ref PanelReplacement PU)
         {
             addLabel("from current pixel diameter:", ref PU);
 
@@ -362,7 +366,7 @@ namespace ImageOP
             addvariablesCB(ref PU);
         }
 
-        private static void addOperations(ref PanelUpdates PU)
+        private static void addOperations(ref PanelReplacement PU)
         {
             //pixel operations
             var CB = new ComboBox();
@@ -376,7 +380,7 @@ namespace ImageOP
             PU.addControl(CB, true);
         }
 
-        private static void AddUserPixelOperationline(ref PanelUpdates PU)
+        private static void AddUserPixelOperationline(ref PanelReplacement PU)
         {
             addLabel("from", ref PU);
 
@@ -397,7 +401,7 @@ namespace ImageOP
             addvariablesCB(ref PU);
         }
 
-        private static void AddVarPixelOperationline(ref PanelUpdates PU)
+        private static void AddVarPixelOperationline(ref PanelReplacement PU)
         {
             addLabel("from", ref PU);
 
@@ -414,7 +418,7 @@ namespace ImageOP
             addvariablesCB(ref PU);
         }
 
-        private static void addComparisons(ref PanelUpdates PU)
+        private static void addComparisons(ref PanelReplacement PU)
         {
             var CB = new ComboBox();
             CB.Items.Add(calculations.LTop);
@@ -427,7 +431,7 @@ namespace ImageOP
             PU.addControl(CB, true);
         }
 
-        private static void addIfPosConditionLine(ref PanelUpdates PU)
+        private static void addIfPosConditionLine(ref PanelReplacement PU)
         {
             addLabel(calculations.Ifposcondition, ref PU);
 
@@ -456,7 +460,7 @@ namespace ImageOP
             addLabel("then...", ref PU);
         }
 
-        private static void addIfConditionLine(ref PanelUpdates PU)
+        private static void addIfConditionLine(ref PanelReplacement PU)
         {
             addLabel(calculations.Ifcolcondition, ref PU);
 
@@ -477,7 +481,7 @@ namespace ImageOP
             addLabel("then...", ref PU);
         }
 
-        private static void addEndIfConditionLine(ref PanelUpdates PU)
+        private static void addEndIfConditionLine(ref PanelReplacement PU)
         {
             var CB = new ComboBox();
             CB.Items.Add(calculations.Endifcondition);
@@ -564,7 +568,7 @@ namespace ImageOP
             var count = 0;
             foreach (var f in formulas)
             {
-                var PU = formulapanel.Controls[count] as PanelUpdates;
+                var PU = formulapanel.Controls[count] as PanelReplacement;
                 count++;
                 SW.WriteLine("FSTART");
                 if (f.operations.Count == 0)
@@ -588,7 +592,7 @@ namespace ImageOP
             var count = 0;
             foreach (var f in formulas)
             {
-                var PU = formulapanel.Controls[count] as PanelUpdates;
+                var PU = formulapanel.Controls[count] as PanelReplacement;
                 count++;
                 f.setoperations(ref PU);
             }
@@ -622,7 +626,7 @@ namespace ImageOP
         private static void B_Click(object sender, EventArgs e)
         {
             var B = ((Button)sender);
-            var U = ((PanelUpdates)B.Parent);
+            var U = ((PanelReplacement)B.Parent);
             var F = ((FormulaEditor)U.Parent.Parent);
 
             formula fm = null;
@@ -645,7 +649,7 @@ namespace ImageOP
         private static void B_Click2(object sender, EventArgs e)
         {
             var B = ((Button)sender);
-            var U = ((PanelUpdates)B.Parent);
+            var U = ((PanelReplacement)B.Parent);
             var C = U.getControlByName(B.Tag as String);
 
             var ME = new matrixeditor(C.Text);
@@ -664,17 +668,17 @@ namespace ImageOP
 
         private static void handlefloatinput(object sender, KeyPressEventArgs e)
         {
-            e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true, true, false), e.KeyChar);
+            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, true, false), e.KeyChar);
         }
 
         private static void handlenumbersinput(object sender, KeyPressEventArgs e)
         {
-            e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true, false, false), e.KeyChar);
+            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar);
         }
 
-        public static formula addline(ref PanelUpdates formulapanel, string type, string subtype)
+        public static formula addline(ref PanelReplacement formulapanel, string type, string subtype)
         {
-            var newPanel = new PanelUpdates();
+            var newPanel = new PanelReplacement();
             newPanel.BackColor = Color.FromArgb(200, 200, 200);
             newPanel.Size = new Size(formulapanel.Width, 25);
 
@@ -720,7 +724,7 @@ namespace ImageOP
             //add remove button
             addclosebutton(ref newPanel);
 
-            var C = formulapanel.addControl(newPanel);
+            var C = formulapanel.addControl(newPanel,false);
             var f = new formula();
             f.type = type;
             f.subtype = subtype;
@@ -728,7 +732,7 @@ namespace ImageOP
 
             //reset width here
             var last = newPanel.Controls[newPanel.Controls.Count - 1];
-            newPanel.Size = new Size(last.Location.X + last.Width + PanelUpdates.gap, 25);
+            newPanel.Size = new Size(last.Location.X + last.Width + PanelReplacement.gap, 25);
             return f;
         }
 

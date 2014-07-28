@@ -46,7 +46,7 @@ namespace ImageOP
 			return ret;
 		}
 
-		public static void deserialise(List<formula> fl, ref PanelUpdates PU)
+		public static void deserialise(List<formula> fl, ref PanelReplacement PU)
 		{
 			PU.clearControls();
 			var F = ((FormulaEditor) PU.Parent);
@@ -130,7 +130,7 @@ namespace ImageOP
 			return listf;
 		}
 
-		public static void deserialise(String filename, ref PanelUpdates PU)
+		public static void deserialise(String filename, ref PanelReplacement PU)
 		{
 			var FS = new FileStream(filename, FileMode.Open);
 			var SR = new StreamReader(FS);
@@ -193,7 +193,7 @@ namespace ImageOP
 			}
 		}
 
-		public void setoperations(ref PanelUpdates PU)
+		public void setoperations(ref PanelReplacement PU)
 		{
 			var retop = new List<string>();
 

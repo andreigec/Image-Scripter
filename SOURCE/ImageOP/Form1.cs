@@ -34,7 +34,7 @@ namespace ImageOP
 
         #region licensing
         private const string AppTitle = "Image OP";
-        private const double AppVersion = 0.3;
+        private const double AppVersion = 0.4;
         private const String HelpString = "";
 
         private const String UpdatePath = "https://github.com/EvilSeven/Image-OP/zipball/master";
@@ -97,8 +97,9 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 			LoadFastFormulas();
             LoadConfig();
-
-            Licensing.CreateLicense(this, HelpString, AppTitle, AppVersion, OtherText, VersionPath, UpdatePath, ChangelogPath, menuStrip1);
+		    var sd = new Licensing.SolutionDetails(HelpString, AppTitle, AppVersion, OtherText, VersionPath, UpdatePath,
+		                                           ChangelogPath);
+            Licensing.CreateLicense(this,sd , menuStrip1);
 		}
 
 		private void LoadFastFormulas()
@@ -487,12 +488,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		{
 			ApplyFormula();
 		}
-
-		private void FastformulaCbSelectedIndexChanged(object sender, EventArgs e)
-		{
-			LoadFastFormula();
-		}
-
+        
 		private void MaintabcontrolMouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button != MouseButtons.Right)
@@ -536,7 +532,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 		private void threadCB_KeyPress(object sender, KeyPressEventArgs e)
 		{
-            e.Handled = TextboxUpdates.HandleInput(TextboxUpdates.InputType.Create(false, true, false, false), e.KeyChar,
+            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar,
                                                    threadCB);
 		}
 
@@ -550,6 +546,11 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
             tsi.Add(showPopupWhenAlgorithmsCompleteToolStripMenuItem);
 
             FormConfigRestore.SaveConfig(this, ConfigFile, lc, tsi);
+        }
+
+        private void loadfastformulaB_Click(object sender, EventArgs e)
+        {
+            LoadFastFormula();
         }
 
 	}
