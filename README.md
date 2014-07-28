@@ -1,6 +1,6 @@
-Image-OP
+Image-Scripter
 ========
-Image OP performs image operations via a scripting language.
+Image-Scripter performs image operations via a scripting language.
 Can do:
 *Pixel operations on both user input/other values
 *Neighbour hood operations from user input such as blurring.
@@ -9,8 +9,3 @@ Can do:
 
 Images
 ======
-![iop1](https://github.com/EvilSeven/Image-OP/raw/master/INFO/iop1.jpg)
-
-![iop2](https://github.com/EvilSeven/Image-OP/raw/master/INFO/iop2.jpg)
-
-![iop3](https://github.com/EvilSeven/Image-OP/raw/master/INFO/iop3.jpg)

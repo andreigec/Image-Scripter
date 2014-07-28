@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using ANDREICSLIB;
+using ImageOP.ServiceReference1;
 
 namespace ImageOP
 {
@@ -22,34 +23,30 @@ namespace ImageOP
 
 		public const int Progressrollover = 200;
 
-	    public string BaseDirectoryAbsPath;
-        public string FormulaFolderAbsPath;
-        public const String Formulafolder = "Formulas";
-	    public const string ConfigFile = "ImageOP.cfg";
+		public string BaseDirectoryAbsPath;
+		public string FormulaFolderAbsPath;
+		public const String Formulafolder = "Formulas";
+		public const string ConfigFile = "ImageOP.cfg";
 		public const String Formulaextension = "IOFM";
-		public List<formula> Formulas = new List<formula>();
+		public List<Formula> Formulas = new List<Formula>();
 		//private String _rootFolder = "";
 		//all the currently opened images
-		public Dictionary<int, ICL> ImagePanels = new Dictionary<int, ICL>();
+		public Dictionary<int, ImagePanel> ImagePanels = new Dictionary<int, ImagePanel>();
 
-        #region licensing
-        private const string AppTitle = "Image OP";
-        private const double AppVersion = 0.4;
-        private const String HelpString = "";
+		#region licensing
+		private const string AppTitle = "Image Scripter";
+		private const double AppVersion = 0.6;
+		private const String HelpString = "";
 
-        private const String UpdatePath = "https://github.com/EvilSeven/Image-OP/zipball/master";
-        private const String VersionPath = "https://raw.github.com/EvilSeven/Image-OP/master/INFO/version.txt";
-        private const String ChangelogPath = "https://raw.github.com/EvilSeven/Image-OP/master/INFO/changelog.txt";
-
-        private readonly String OtherText =
-            @"©" + DateTime.Now.Year +
-            @" Andrei Gec (http://www.andreigec.net)
+		private readonly String OtherText =
+			@"©" + DateTime.Now.Year +
+			@" Andrei Gec (http://www.andreigec.net)
 
 Licensed under GNU LGPL (http://www.gnu.org/)
 
 Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 ";
-        #endregion
+		#endregion
 
 		public Form1()
 		{
@@ -60,51 +57,87 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		{
 			Application.Exit();
 		}
-        
-		private void loadImage(ref ICL I, String path)
+
+		private bool LoadImage(ref ImagePanel I, String path)
 		{
-			if (File.Exists(path) == false)
-				return;
-			I.I = Image.FromFile(path);
-			I.output.BackgroundImage = I.I;
+			try
+			{
+				if (File.Exists(path) == false)
+					return false;
+				I.I = Image.FromFile(path);
+				I.output.BackgroundImage = I.I;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error loading image:" + ex);
+				return false;
+			}
+			return true;
 		}
 
-        private string GetFormulaPath(String relativeFormulaName)
-        {
-            return FormulaFolderAbsPath + relativeFormulaName;
-        }
+		private string GetFormulaPath(String relativeFormulaName)
+		{
+			return FormulaFolderAbsPath + relativeFormulaName;
+		}
 
-        private void LoadConfig()
-        {
-            FormConfigRestore.LoadConfig(this, ConfigFile);
-            if (File.Exists(GetFormulaPath(fastformulaCB.Text)) == false)
-                fastformulaCB.Text = "";
-        }
-        
+		private void LoadConfig()
+		{
+			FormConfigRestore.LoadConfig(this, ConfigFile);
+			if (File.Exists(GetFormulaPath(fastformulaCB.Text)) == false)
+				fastformulaCB.Text = "";
+		}
+
 		private void Form1Load(object sender, EventArgs e)
 		{
-		    BaseDirectoryAbsPath = Directory.GetCurrentDirectory();
-		    FormulaFolderAbsPath = BaseDirectoryAbsPath + "\\" + Formulafolder+"\\";
+			BaseDirectoryAbsPath = Directory.GetCurrentDirectory();
+			FormulaFolderAbsPath = BaseDirectoryAbsPath + "\\" + Formulafolder + "\\";
 
-		    //ensure there is a formulas folder
+			//ensure there is a formulas folder
 			if (Directory.Exists(Formulafolder) == false)
 				Directory.CreateDirectory(Formulafolder);
 
-            //get the logical processor count by default
-            var th = Environment.ProcessorCount;
-            threadCB.Items.Add(th.ToString());
-            threadCB.Text = th.ToString();
+			//get the logical processor count by default
+			var th = Environment.ProcessorCount;
+			threadCB.Items.Add(th.ToString());
+			threadCB.Text = th.ToString();
 
 			LoadFastFormulas();
-            LoadConfig();
-		    var sd = new Licensing.SolutionDetails(HelpString, AppTitle, AppVersion, OtherText, VersionPath, UpdatePath,
-		                                           ChangelogPath);
-            Licensing.CreateLicense(this,sd , menuStrip1);
+			LoadConfig();
+
+			Licensing.CreateLicense(this, menuStrip1,
+				new Licensing.SolutionDetails(GetDetails, HelpString, AppTitle, AppVersion, OtherText));
+		}
+
+		public Licensing.DownloadedSolutionDetails GetDetails()
+		{
+			try
+			{
+				var sr = new ServicesClient();
+				var ti = sr.GetTitleInfo(AppTitle);
+				if (ti == null)
+					return null;
+				return ToDownloadedSolutionDetails(ti);
+
+			}
+			catch (Exception)
+			{
+			}
+			return null;
+		}
+
+		public static Licensing.DownloadedSolutionDetails ToDownloadedSolutionDetails(TitleInfoServiceModel tism)
+		{
+			return new Licensing.DownloadedSolutionDetails()
+			{
+				ZipFileLocation = tism.LatestTitleDownloadPath,
+				ChangeLog = tism.LatestTitleChangelog,
+				Version = tism.LatestTitleVersion
+			};
 		}
 
 		private void LoadFastFormulas()
 		{
-		    var op = fastformulaCB.Text;
+			var op = fastformulaCB.Text;
 			fastformulaCB.Items.Clear();
 			foreach (var s in Directory.GetFiles(FormulaFolderAbsPath))
 			{
@@ -114,7 +147,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 				}
 			}
 
-		    fastformulaCB.Text = op;
+			fastformulaCB.Text = op;
 		}
 
 
@@ -127,8 +160,8 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 				{
 					if (f.type.Equals(type) && f.subtype.Equals(subtype))
 					{
-						if (int.Parse(f.operations[index]) > diam)
-							diam = int.Parse(f.operations[index]);
+						if (int.Parse(f.Operations[index]) > diam)
+							diam = int.Parse(f.Operations[index]);
 					}
 				}
 			}
@@ -138,44 +171,20 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			}
 			return diam;
 		}
-		/*
-		private int GetLargestNumber(String type, String subtype, String subsubtype, int subsubtypeindex, int index)
-		{
-			int diam = -1;
-			try
-			{
-				foreach (formula f in Formulas)
-				{
-					if (f.type.Equals(type) && f.subtype.Equals(subtype))
-					{
-						if (f.operations[1].Equals(subsubtype))
-						{
-							if (int.Parse(f.operations[index]) > diam)
-								diam = int.Parse(f.operations[index]);
-						}
-					}
-				}
-			}
-			catch
-			{
-			}
-			return diam;
-		}
-		*/
 
 		private void TrimFormulas()
 		{
 			foreach (var f in Formulas)
 			{
 				f.skip = false;
-				if (f.type == calculations.Commentop)
+				if (f.type == Calculations.Commentop)
 					f.skip = true;
 			}
 		}
 
 		private void ApplyFormula()
 		{
-			if (calculations.Threadfincount > 0)
+			if (Calculations.Threadfincount > 0)
 			{
 				MessageBox.Show("already performing an operation");
 				return;
@@ -191,21 +200,21 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			TrimFormulas();
 
 			//sanity checks
-			var error = calculations.FormulaChecks(Formulas, ImagePanels);
+			var error = Calculations.FormulaChecks(Formulas, ImagePanels);
 			if (string.IsNullOrEmpty(error) == false)
 			{
 				MessageBox.Show(error, "Formula Error!");
 				return;
 			}
 
-			var imlist = new Dictionary<int, im>();
+			var imlist = new Dictionary<int, CustomImage>();
 
 			int maxw = 0, maxh = 0;
 			var az = 0;
 			var pf = PixelFormat.DontCare;
 			foreach (var ic in ImagePanels)
 			{
-				var newim = new im(ic.Value);
+				var newim = new CustomImage(ic.Value);
 				if (newim.Width > maxw)
 					maxw = newim.Width;
 				if (newim.Height > maxh)
@@ -228,35 +237,35 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			var outputvalues = new byte[bys];
 
 			//var time = DateTime.Now;
-			var pixelsto = new im
-			               	{
-			               		Array = outputvalues,
-			               		Format = outputBitmapData.PixelFormat,
-			               		Height = outputBitmap.Height,
-			               		Width = outputBitmap.Width,
-			               		Scan0 = outputBitmapData.Scan0,
-			               		Stride = outputBitmapData.Stride
-			               	};
+			var pixelsto = new CustomImage
+							{
+								Array = outputvalues,
+								Format = outputBitmapData.PixelFormat,
+								Height = outputBitmap.Height,
+								Width = outputBitmap.Width,
+								Scan0 = outputBitmapData.Scan0,
+								Stride = outputBitmapData.Stride
+							};
 
-			var i = new information { imlist = imlist, pixelsTo = pixelsto, maxw = maxw, maxh = maxh };
+			var i = new Information { imlist = imlist, pixelsTo = pixelsto, maxw = maxw, maxh = maxh };
 
-			calculations.Initcalculations(Formulas, ref i);
+			Calculations.Initcalculations(Formulas, ref i);
 
 			//get the custom matricies
-			if (calculations.GetCustomMatricies(Formulas) == false)
+			if (Calculations.GetCustomMatricies(Formulas) == false)
 				return;
 
 			//link the variables to their array
-			calculations.SetImageLocations();
+			Calculations.SetImageLocations();
 
 			//get max pass count
-			var passcount = GetLargestNumber(calculations.Passoperation, "", 0);
+			var passcount = GetLargestNumber(Calculations.Passoperation, "", 0);
 			//if there is no pass, then we just want 1
 			if (passcount == -1)
 				passcount = 1;
 
 			//set this form
-			calculations.Baseform = this;
+			Calculations.Baseform = this;
 
 			//create threads
 			int threads;
@@ -273,19 +282,19 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			for (var pass = 1; pass <= passcount; pass++)
 			{
 				//set the pass number
-				calculations.Thispassnumber = pass;
+				Calculations.Thispassnumber = pass;
 				var dist = 0;
 				for (var a = 0; a < threads; a++)
 				{
-					var ti = new threadinfo(dist, dist + pixeldistance, 0, maxh);
+					var ti = new ThreadInfo(dist, dist + pixeldistance, 0, maxh);
 
-					var t = new Thread(calculations.ApplyMain);
+					var t = new Thread(Calculations.ApplyMain);
 					dist += pixeldistance;
 					t.Start(ti);
 				}
 
 				var events = 0;
-				while (calculations.Threadfincount < threads)
+				while (Calculations.Threadfincount < threads)
 				{
 					Thread.Sleep(100);
 					events++;
@@ -295,12 +304,12 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 						Application.DoEvents();
 					}
 				}
-				calculations.Threadfincount = 0;
+				Calculations.Threadfincount = 0;
 			}
 
 			Marshal.Copy(outputvalues, 0, outputBitmapData.Scan0, bys);
 			outputBitmap.UnlockBits(outputBitmapData);
-			
+
 			Image ni = outputBitmap;
 
 			LoadImageIntoTabPage("", ni);
@@ -320,22 +329,20 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		{
 			progressbar.Value++;
 		}
-        
+
 		private void LoadImageIntoTabPage(String filenameIN, Image i = null)
 		{
 			if (string.IsNullOrEmpty(filenameIN) == false && File.Exists(filenameIN) == false)
 				return;
 
-			var filename = calculations.Imageimage + ImagePanels.Count.ToString();
+			var filename = Calculations.Imageimage + ImagePanels.Count.ToString();
 
 			//create new tabpage and panel
 			var newTP = new TabPage(filename);
-			var p = new Panel {BackgroundImageLayout = ImageLayout.Zoom, Name = filename,Dock = DockStyle.Fill};
+			var p = new Panel { BackgroundImageLayout = ImageLayout.Zoom, Name = filename, Dock = DockStyle.Fill };
 
-			var newICL = new ICL {output = p};
+			var newICL = new ImagePanel { output = p };
 
-			ImagePanels.Add(ImagePanels.Count, newICL);
-			maintabcontrol.TabPages.Add(newTP);
 			if (i != null)
 			{
 				newICL.I = i;
@@ -343,14 +350,20 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			}
 
 			else
-				loadImage(ref newICL, filenameIN);
+			{
+				if (LoadImage(ref newICL, filenameIN) == false)
+					return;
+			}
+
+			ImagePanels.Add(ImagePanels.Count, newICL);
+			maintabcontrol.TabPages.Add(newTP);
 
 			newTP.Controls.Add(p);
 		}
-        
+
 		private void LoadimagebuttonClick(object sender, EventArgs e)
 		{
-			var ofd = new OpenFileDialog {Title = "Select image to load", InitialDirectory = BaseDirectoryAbsPath};
+			var ofd = new OpenFileDialog { Title = "Select image to load", InitialDirectory = BaseDirectoryAbsPath };
 			var dr = ofd.ShowDialog();
 			if (dr != DialogResult.OK)
 				return;
@@ -372,10 +385,15 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			if (tp == null)
 				return;
 
-			if (tp.Text.StartsWith(calculations.Imageimage) == false)
+			if (tp.Text.StartsWith(Calculations.Imageimage) == false)
 				return;
 
-			var index = int.Parse(tp.Text.Substring(calculations.Imageimage.Length));
+			RemoveTabPageAndImage(tp);
+		}
+
+		private void RemoveTabPageAndImage(TabPage tp)
+		{
+			var index = int.Parse(tp.Text.Substring(Calculations.Imageimage.Length));
 			var p = tp.Controls[0] as Panel;
 
 			//move images up
@@ -384,7 +402,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			{
 				var i = ImagePanels[a];
 
-				var newn = calculations.Imageimage + (a - 1).ToString();
+				var newn = Calculations.Imageimage + (a - 1).ToString();
 				ImagePanels[a - 1] = ImagePanels[a];
 				ImagePanels.Remove(a);
 
@@ -427,18 +445,18 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 				return;
 			var p = tp.Controls[0] as Panel;
 
-			//get the ICL control
+			//get the ImagePanel control
 			var foundicl = (from thisicl in ImagePanels where thisicl.Value.output == p select thisicl.Value).FirstOrDefault();
 			if (foundicl == null)
 				return;
 
 			var sfd = new SaveFileDialog
-			          	{
-                            InitialDirectory = BaseDirectoryAbsPath,
-			          		Filter = "PNG Image|*.png",
-			          		AddExtension = true,
-			          		FileName = foundicl.output.Text
-			          	};
+						{
+							InitialDirectory = BaseDirectoryAbsPath,
+							Filter = "PNG Image|*.png",
+							AddExtension = true,
+							FileName = foundicl.output.Text
+						};
 
 			var dr = sfd.ShowDialog();
 			if (dr != DialogResult.OK)
@@ -448,7 +466,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 		private void FEbuttonClick1(object sender, EventArgs e)
 		{
-            var fe = Formulas.Count > 0 ? new FormulaEditor(BaseDirectoryAbsPath, this, Formulas) : new FormulaEditor(BaseDirectoryAbsPath, this);
+			var fe = Formulas.Count > 0 ? new FormulaEditor(BaseDirectoryAbsPath, this, Formulas) : new FormulaEditor(BaseDirectoryAbsPath, this);
 			fe.ShowDialog();
 
 			if (fe.isSet)
@@ -477,7 +495,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 			}
 			if (String.IsNullOrEmpty(path))
 				return;
-			var listf = formula.deserialise(path);
+			var listf = Formula.Deserialise(path);
 			foreach (var f in listf)
 			{
 				Formulas.Add(f);
@@ -488,7 +506,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		{
 			ApplyFormula();
 		}
-        
+
 		private void MaintabcontrolMouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button != MouseButtons.Right)
@@ -501,7 +519,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 				var r = maintabcontrol.GetTabRect(i);
 				if (r.Contains(e.Location))
 				{
-					if (maintabcontrol.TabPages[i].Text.StartsWith(calculations.Imageimage) == false)
+					if (maintabcontrol.TabPages[i].Text.StartsWith(Calculations.Imageimage) == false)
 						return;
 					// show the context menu here
 					maintabcontrol.Tag = maintabcontrol.TabPages[i];
@@ -512,7 +530,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 		private void CloseAllTabsToolStripMenuItemClick(object sender, EventArgs e)
 		{
-			ImagePanels = new Dictionary<int, ICL>();
+			ImagePanels = new Dictionary<int, ImagePanel>();
 			while (maintabcontrol.TabPages.Count > 1)
 				maintabcontrol.TabPages.RemoveAt(1);
 		}
@@ -520,7 +538,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 		private void ShowHistogramToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			var name = ((TabPage)maintabcontrol.Tag).Text;
-			var index = int.Parse(name.Substring(calculations.Imageimage.Length));
+			var index = int.Parse(name.Substring(Calculations.Imageimage.Length));
 			var hg = new histogram(this, index);
 			hg.ShowDialog();
 		}
@@ -532,26 +550,26 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
 		private void threadCB_KeyPress(object sender, KeyPressEventArgs e)
 		{
-            e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar,
-                                                   threadCB);
+			e.Handled = TextboxExtras.HandleInput(TextboxExtras.InputType.Create(false, true, false, false), e.KeyChar,
+												   threadCB);
 		}
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            var lc = new List<Control>();
-            lc.Add(fastformulaCB);
-            lc.Add(threadCB);
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			var lc = new List<Control>();
+			lc.Add(fastformulaCB);
+			lc.Add(threadCB);
 
-            var tsi = new List<ToolStripItem>();
-            tsi.Add(showPopupWhenAlgorithmsCompleteToolStripMenuItem);
+			var tsi = new List<ToolStripItem>();
+			tsi.Add(showPopupWhenAlgorithmsCompleteToolStripMenuItem);
 
-            FormConfigRestore.SaveConfig(this, ConfigFile, lc, tsi);
-        }
+			FormConfigRestore.SaveConfig(this, ConfigFile, lc, tsi);
+		}
 
-        private void loadfastformulaB_Click(object sender, EventArgs e)
-        {
-            LoadFastFormula();
-        }
+		private void loadfastformulaB_Click(object sender, EventArgs e)
+		{
+			LoadFastFormula();
+		}
 
 	}
 }
