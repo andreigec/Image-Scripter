@@ -1,0 +1,12 @@
+FSTART
+Moves
+Move
+IM:Image:0
+IM:Variable:1
+FEND
+FSTART
+Moves
+Move
+IM:Variable:1
+IM:Output
+FEND

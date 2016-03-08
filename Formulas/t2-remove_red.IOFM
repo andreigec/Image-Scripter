@@ -1,0 +1,9 @@
+FSTART
+Operation
+User Input Pixel Operation
+IM:Image:0
+Subtract
+255
+Colour:Red
+IM:Output
+FEND

@@ -1,0 +1,8 @@
+FSTART
+Operation
+Custom Neighbourhood Operations
+-1,-2,-1#0,0,0#1,2,1
+IM:Image:0
+Colour:All
+IM:Output
+FEND

@@ -1,0 +1,19 @@
+FSTART
+Conditions
+If-Position
+Y
+Pixels
+Mod(0 rem)
+3
+FEND
+FSTART
+Moves
+Move
+IM:Image:0
+IM:Output
+FEND
+FSTART
+Conditions
+End If
+End If
+FEND

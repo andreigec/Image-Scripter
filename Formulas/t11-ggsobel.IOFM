@@ -1,0 +1,38 @@
+FSTART
+Passes
+
+1
+FEND
+FSTART
+Operation
+Preset Neighbourhood Operations
+3
+Mean Average
+IM:Image:0
+Colour:All
+IM:Output
+FEND
+FSTART
+Passes
+
+2
+FEND
+FSTART
+Moves
+Move
+IM:Output
+IM:Image:0
+FEND
+FSTART
+Passes
+
+3
+FEND
+FSTART
+Operation
+Custom Neighbourhood Operations
+-1,-2,-1#0,0,0#1,2,1
+IM:Image:0
+Colour:All
+IM:Output
+FEND

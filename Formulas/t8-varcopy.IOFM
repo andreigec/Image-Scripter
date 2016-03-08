@@ -1,0 +1,9 @@
+FSTART
+Operation
+Variable Pixel Operation
+IM:Output
+Add
+IM:Image:0
+Colour:All
+IM:Output
+FEND

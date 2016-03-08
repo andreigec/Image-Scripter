@@ -1,0 +1,60 @@
+FSTART
+Comment
+
+perform a blur, move result back to original buffer
+FEND
+FSTART
+Operation
+Preset Neighbourhood Operations
+3
+Median Average
+IM:Image:0
+Colour:All
+IM:Output
+FEND
+FSTART
+Passes
+
+2
+FEND
+FSTART
+Moves
+Move
+IM:Output
+IM:Image:0
+FEND
+FSTART
+Comment
+
+apply the sobel matrix for up and down, add pixels together for output
+FEND
+FSTART
+Passes
+
+3
+FEND
+FSTART
+Operation
+Custom Neighbourhood Operations
+-1,0,1,0,-1#0,1,0,1,0#-1,0,1,0,-1#0,1,0,1,0#-1,0,1,0,-1
+IM:Image:0
+Colour:All
+IM:Variable:1
+FEND
+FSTART
+Operation
+Custom Neighbourhood Operations
+-1,0,1#-2,0,2#-1,0,1
+IM:Image:0
+Colour:All
+IM:Variable:2
+FEND
+FSTART
+Operation
+Variable Pixel Operation
+IM:Variable:1
+Add
+IM:Variable:2
+Colour:All
+IM:Output
+FEND

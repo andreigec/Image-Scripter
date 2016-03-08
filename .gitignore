@@ -1,5 +1,3 @@
-
-/SOURCE/ImageOP.6.0.ReSharper.user
-/SOURCE/_ReSharper.ImageOP
-/SOURCE/ImageOP/obj
-/SOURCE/ImageOP/bin
+*.suo
+bin
+obj
